@@ -1,4 +1,7 @@
 .env
 node_modules
 yarn-error.log
-production-server/
+production-server/web/.next/
+web/node_modules/
+web/.next/
+web/.env.local

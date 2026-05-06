@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+@theme {
+  /* Cyberpunk color palette */
+  --color-cyber-bg: #08080f;
+  --color-cyber-surface: #10101a;
+  --color-cyber-card: #14141f;
+  --color-cyber-border: #1e1e2e;
+  --color-cyber-cyan: #00f5ff;
+  --color-cyber-magenta: #ff00c8;
+  --color-cyber-amber: #ffb800;
+  --color-cyber-green: #39ff14;
+  --color-cyber-violet: #8b5cf6;
+  --color-cyber-red: #ff2d55;
+  --color-cyber-muted: #4a4a6a;
+  --color-cyber-text: #e2e2f0;
+  --color-cyber-dim: #6b6b8a;
+
+  /* Rarity colors */
+  --color-rarity-common: #9ca3af;
+  --color-rarity-uncommon: #4ade80;
+  --color-rarity-rare: #60a5fa;
+  --color-rarity-epic: #a78bfa;
+  --color-rarity-legendary: #fbbf24;
+
+  /* Category colors */
+  --color-cat-mind: #8b5cf6;
+  --color-cat-body: #39ff14;
+  --color-cat-focus: #00f5ff;
+  --color-cat-social: #ffb800;
+  --color-cat-create: #ff00c8;
+  --color-cat-rest: #2dd4bf;
+
+  /* Custom shadows */
+  --shadow-neon-cyan: 0 0 10px rgba(0,245,255,0.4), 0 0 30px rgba(0,245,255,0.15);
+  --shadow-neon-magenta: 0 0 10px rgba(255,0,200,0.4), 0 0 30px rgba(255,0,200,0.15);
+  --shadow-neon-amber: 0 0 10px rgba(255,184,0,0.4), 0 0 30px rgba(255,184,0,0.15);
+  --shadow-neon-green: 0 0 10px rgba(57,255,20,0.4), 0 0 30px rgba(57,255,20,0.15);
+  --shadow-neon-violet: 0 0 10px rgba(139,92,246,0.4), 0 0 30px rgba(139,92,246,0.15);
+
+  /* Animations */
+  --animate-float: float 3s ease-in-out infinite;
+  --animate-slide-up: slide-up 0.3s ease-out;
+  --animate-scale-in: scale-in 0.2s ease-out;
+  --animate-shimmer: shimmer 2s linear infinite;
+  --animate-pulse-neon: pulse-neon 2s ease-in-out infinite;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  @keyframes slide-up {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  @keyframes scale-in {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  @keyframes pulse-neon {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+}
+
+/* Base resets */
+*, *::before, *::after {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  background-color: var(--color-cyber-bg);
+  color: var(--color-cyber-text);
+  height: 100%;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--color-cyber-surface); }
+::-webkit-scrollbar-thumb { background: var(--color-cyber-border); border-radius: 2px; }
+
+/* Reusable component classes */
+@utility card-cyber {
+  background-color: var(--color-cyber-card);
+  border-radius: 1rem;
+  border: 1px solid var(--color-cyber-border);
+}
+
+@utility neon-border-cyan {
+  border: 1px solid rgba(0, 245, 255, 0.3);
+  box-shadow: inset 0 0 10px rgba(0, 245, 255, 0.05);
+}
+
+@utility neon-border-magenta {
+  border: 1px solid rgba(255, 0, 200, 0.3);
+  box-shadow: inset 0 0 10px rgba(255, 0, 200, 0.05);
+}
+
+@utility grid-bg {
+  background-image:
+    linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+@utility shimmer-bg {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.05) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+}
