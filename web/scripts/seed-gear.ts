@@ -1,27 +1,23 @@
 /**
- * Run with: GOOGLE_APPLICATION_CREDENTIALS=... npx ts-node scripts/seed-gear.ts
- * Or use the Firebase admin SDK in a Cloud Function.
- *
- * For local seeding, paste your Firebase config and run this with tsx:
- * npx tsx scripts/seed-gear.ts
+ * Seed the gearCatalog collection using Firebase Admin SDK (bypasses security rules).
+ * Run with: npx tsx scripts/seed-gear.ts
+ * Requires: ../../service-account.json  (gitignored)
  */
 
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, setDoc, doc } from "firebase/firestore";
+import * as admin from "firebase-admin";
+import { readFileSync } from "fs";
+import { join } from "path";
 import type { GearItem } from "../src/lib/types";
 
-// TODO: Replace with your .env values
-const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-};
+const serviceAccount = JSON.parse(
+  readFileSync(join(__dirname, "../../service-account.json"), "utf8")
+);
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
+
+const db = admin.firestore();
 
 const GEAR_CATALOG: Omit<GearItem, "id">[] = [
   // ── Common ──────────────────────────────────────────────────────────────────
@@ -257,14 +253,19 @@ const GEAR_CATALOG: Omit<GearItem, "id">[] = [
 ];
 
 async function seed() {
-  console.log(`Seeding ${GEAR_CATALOG.length} gear items…`);
+  console.log(`Seeding ${GEAR_CATALOG.length} gear items to habbyquacks/gearCatalog…`);
+  const batch = db.batch();
   for (const item of GEAR_CATALOG) {
-    const ref = doc(collection(db, "gearCatalog"));
-    await setDoc(ref, { ...item, id: ref.id });
-    console.log(`  ✓ ${item.name} (${item.rarity})`);
+    const ref = db.collection("gearCatalog").doc();
+    batch.set(ref, { ...item, id: ref.id });
+    console.log(`  queued: ${item.name} (${item.rarity})`);
   }
-  console.log("Done!");
+  await batch.commit();
+  console.log(`\n✓ All ${GEAR_CATALOG.length} items written successfully.`);
   process.exit(0);
 }
 
-seed().catch((err) => { console.error(err); process.exit(1); });
+seed().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});

@@ -5,3 +5,5 @@ production-server/web/.next/
 web/node_modules/
 web/.next/
 web/.env.local
+*service-account*.json
+*serviceAccount*.json
