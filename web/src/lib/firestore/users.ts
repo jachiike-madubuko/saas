@@ -86,17 +86,17 @@ export async function createDuck(uid: string, name: string, personality: string)
     equippedAccessoryId: null,
     equippedCosmeticId: null,
   };
-  await setDoc(doc(db, "ducks", uid), duck);
+  await setDoc(doc(db, "users", uid, "duck", uid), duck);
   return duck;
 }
 
 export async function getDuck(uid: string): Promise<Duck | null> {
-  const snap = await getDoc(doc(db, "ducks", uid));
+  const snap = await getDoc(doc(db, "users", uid, "duck", uid));
   return snap.exists() ? (snap.data() as Duck) : null;
 }
 
 export async function updateDuck(uid: string, data: Partial<Duck>): Promise<void> {
-  await updateDoc(doc(db, "ducks", uid), data as Record<string, unknown>);
+  await updateDoc(doc(db, "users", uid, "duck", uid), data as Record<string, unknown>);
 }
 
 export async function getRecentTransactions(uid: string, limitCount = 20): Promise<RewardTransaction[]> {
