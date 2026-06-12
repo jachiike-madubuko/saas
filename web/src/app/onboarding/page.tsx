@@ -64,6 +64,7 @@ export default function OnboardingPage() {
   const [selectedIdentities, setSelectedIdentities] = useState<string[]>([]);
   const [selectedStack, setSelectedStack] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const totalSteps = 3;
   const progress = ((step) / totalSteps) * 100;
@@ -107,6 +108,7 @@ export default function OnboardingPage() {
       router.push("/");
     } catch (err) {
       console.error(err);
+      setError(err instanceof Error ? err.message : "Something went wrong. Check the console.");
     } finally {
       setLoading(false);
     }
@@ -245,6 +247,11 @@ export default function OnboardingPage() {
                 </button>
               ))}
             </div>
+            {error && (
+              <p className="text-red-400 text-xs text-center px-2 py-2 bg-red-400/10 border border-red-400/30 rounded-xl">
+                {error}
+              </p>
+            )}
             <Button onClick={handleFinish} disabled={selectedStack === null} loading={loading} className="w-full mt-auto">
               Boot Up CyberDuck
             </Button>
